@@ -35,7 +35,7 @@ public class EmployeeService {
      *   org.springframework.boot.autoconfigure.cache.NoOpCacheConfiguration
      *   3、哪个配置类默认生效：SimpleCacheConfiguration；
      *
-     *   4、给容器中注册了一个CacheManager：ConcurrentMapCacheManager
+     *   4、给容器中注册了一个CacheManager：ConcurrentMapCacheManager---缓存管理器
      *   5、可以获取和创建ConcurrentMapCache类型的缓存组件；他的作用将数据保存在ConcurrentMap中；
      *
      *   运行流程：
@@ -44,7 +44,7 @@ public class EmployeeService {
      *      （CacheManager先获取相应的缓存），第一次获取缓存如果没有Cache组件会自动创建。
      *   2、去Cache中查找缓存的内容，使用一个key，默认就是方法的参数；
      *      key是按照某种策略生成的；默认是使用keyGenerator生成的，默认使用SimpleKeyGenerator生成key；
-     *          SimpleKeyGenerator生成key的默认策略；
+     *          SimpleKeyGenerator生成key的默认策略；SimpleKeyGenerator
      *                  如果没有参数；key=new SimpleKey()；
      *                  如果有一个参数：key=参数的值
      *                  如果有多个参数：key=new SimpleKey(params)；
@@ -59,11 +59,11 @@ public class EmployeeService {
      *      2）、key使用keyGenerator生成的，默认是SimpleKeyGenerator
      *
      *
-     *   几个属性：
+     *   几个属性：  请求中的参数可以通过 #id取出
      *      cacheNames/value：指定缓存组件的名字;将方法的返回结果放在哪个缓存中，是数组的方式，可以指定多个缓存；
      *
      *      key：缓存数据使用的key；可以用它来指定。默认是使用方法参数的值  1-方法的返回值
-     *              编写SpEL； #i d;参数id的值   #a0  #p0  #root.args[0]
+     *              编写SpEL； #id;参数id的值   #a0  #p0  #root.args[0]
      *              getEmp[2]
      *
      *      keyGenerator：key的生成器；可以自己指定key的生成器的组件id
@@ -132,7 +132,7 @@ public class EmployeeService {
      *
      *
      */
-    @CacheEvict(value="emp",beforeInvocation = true/*key = "#id",*/)
+    @CacheEvict(value="emp",beforeInvocation = true/*key = "#id",*/ /*,allEntries = true*/)
     public void deleteEmp(Integer id){
         System.out.println("deleteEmp:"+id);
         //employeeMapper.deleteEmpById(id);
@@ -140,10 +140,20 @@ public class EmployeeService {
     }
 
     // @Caching 定义复杂的缓存规则
+
+    /**
+     *
+     * 组合缓存规则
+     *
+     * @param lastName
+     * @return
+     */
     @Caching(
+            // 定义cacheable规则
          cacheable = {
              @Cacheable(/*value="emp",*/key = "#lastName")
          },
+            // 定义了cacheput规则
          put = {
              @CachePut(/*value="emp",*/key = "#result.id"),
              @CachePut(/*value="emp",*/key = "#result.email")

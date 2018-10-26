@@ -16,12 +16,14 @@ import java.net.UnknownHostException;
 @Configuration
 public class MyRedisConfig {
 
+    // 配置自定义的RedisTemplate
     @Bean
     public RedisTemplate<Object, Employee> empRedisTemplate(
             RedisConnectionFactory redisConnectionFactory)
             throws UnknownHostException {
         RedisTemplate<Object, Employee> template = new RedisTemplate<Object, Employee>();
         template.setConnectionFactory(redisConnectionFactory);
+        // 指定存入Redis中的序列化器。默认使用的是JDK的序列化器，我们修改为转换为Json格式的序列化器
         Jackson2JsonRedisSerializer<Employee> ser = new Jackson2JsonRedisSerializer<Employee>(Employee.class);
         template.setDefaultSerializer(ser);
         return template;
@@ -37,9 +39,8 @@ public class MyRedisConfig {
         return template;
     }
 
-
-
     //CacheManagerCustomizers可以来定制缓存的一些规则
+    // 多个缓存管理器存在时，需要指定一个默认的缓存管理器
     @Primary  //将某个缓存管理器作为默认的
     @Bean
     public RedisCacheManager employeeCacheManager(RedisTemplate<Object, Employee> empRedisTemplate){
@@ -62,6 +63,5 @@ public class MyRedisConfig {
 
         return cacheManager;
     }
-
 
 }

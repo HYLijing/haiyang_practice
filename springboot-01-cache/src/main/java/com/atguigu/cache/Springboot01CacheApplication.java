@@ -35,11 +35,13 @@ import org.springframework.cache.annotation.EnableCaching;
  *   			1、引入了redis的starter，cacheManager变为 RedisCacheManager；
  *   			2、默认创建的 RedisCacheManager 操作redis的时候使用的是 RedisTemplate<Object, Object>
  *   			3、RedisTemplate<Object, Object> 是 默认使用jdk的序列化机制
+ *   			4、因此存入在redis中存入的是序列化后的数据
  *      4）、自定义CacheManager；
  *
  */
 @MapperScan("com.atguigu.cache.mapper")
 @SpringBootApplication
+// 开启缓存
 @EnableCaching
 public class Springboot01CacheApplication {
 

@@ -38,9 +38,9 @@ public class Springboot01CacheApplicationTests {
 	@Test
 	public void test01(){
 		//给redis中保存数据
-	    //stringRedisTemplate.opsForValue().append("msg","hello");
-//		String msg = stringRedisTemplate.opsForValue().get("msg");
-//		System.out.println(msg);
+	    stringRedisTemplate.opsForValue().append("msg","hello");
+		String msg = stringRedisTemplate.opsForValue().get("msg");
+		System.out.println(msg);
 
 //		stringRedisTemplate.opsForList().leftPush("mylist","1");
 //		stringRedisTemplate.opsForList().leftPush("mylist","2");
@@ -52,6 +52,7 @@ public class Springboot01CacheApplicationTests {
 		Employee empById = employeeMapper.getEmpById(1);
 		//默认如果保存对象，使用jdk序列化机制，序列化后的数据保存到redis中
 		//redisTemplate.opsForValue().set("emp-01",empById);
+
 		//1、将数据以json的方式保存
 		 //(1)自己将对象转为json
 		 //(2)redisTemplate默认的序列化规则；改变默认的序列化规则；
